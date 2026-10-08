@@ -173,19 +173,20 @@ footer a { color: var(--muted); }
   ];
   const EFFECT = ['Helped', "Didn't help", 'Made it worse'];
 
-  // Seven components covering every built-in symptom in the app. Pain is
-  // affected by every attack, since severity is pain severity.
+  // Seven components covering every built-in symptom in the app. Each is a
+  // part of you that works until an attack knocks it out. Head goes down in
+  // every attack, since severity is the headache's severity.
   const COMPONENTS = [
-    { id: 'pain', name: 'Pain', tip: 'Headache pain. Affected by every attack', symptoms: ['Throbbing pain', 'Pulsating pain'] },
+    { id: 'head', name: 'Head', tip: 'The headache itself. Affected by every attack', symptoms: ['Throbbing pain', 'Pulsating pain'] },
     { id: 'vision', name: 'Vision', tip: 'Aura, blind spots, blurred vision, scintillations, vision loss', symptoms: ['Aura', 'Blind spots', 'Blurred vision', 'Scintillations', 'Temporary vision loss'] },
     { id: 'senses', name: 'Senses', tip: 'Sensitivity to light, sound or smell', symptoms: ['Sensitivity to light', 'Sensitivity to sound', 'Sensitivity to smell'] },
     { id: 'stomach', name: 'Stomach', tip: 'Nausea, vomiting, bowels, appetite', symptoms: ['Nausea', 'Vomiting', 'Diarrhea', 'Constipation', 'Loss of appetite', 'Food cravings'] },
     { id: 'nerves', name: 'Nerves', tip: 'Numbness, tingling, aphasia, dizziness', symptoms: ['Numbness', 'Tingling', 'Aphasia', 'Dizziness'] },
-    { id: 'mind', name: 'Mind', tip: 'Concentration and mood', symptoms: ['Difficulty concentrating', 'Depression', 'Euphoria', 'Irritability', 'Mood changes'] },
+    { id: 'mood', name: 'Mood & focus', tip: 'Concentration and mood', symptoms: ['Difficulty concentrating', 'Depression', 'Euphoria', 'Irritability', 'Mood changes'] },
     { id: 'body', name: 'Body', tip: 'Fatigue, weakness, temperature, urination', symptoms: ['Fatigue', 'Weakness', 'Muscle weakness', 'Chills', 'Hot flashes', 'Sweating', 'Increased urination'] },
   ];
   const compFor = s => COMPONENTS.filter(c => c.symptoms.includes(s)).map(c => c.id);
-  const componentsFor = symptoms => [...new Set(['pain', ...symptoms.flatMap(compFor)])];
+  const componentsFor = symptoms => [...new Set(['head', ...symptoms.flatMap(compFor)])];
 
   // ---------- Helpers ----------
   const esc = v => String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
