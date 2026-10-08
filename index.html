@@ -378,22 +378,12 @@ footer a { color: var(--muted); }
   };
   let metricRange = 'day';
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const FEED_START = now.getTime() - 120 * DAY; // how far back the feed reaches
 
   // Head goes down in every attack, so its downtime is the attacks' overlap.
   const downtime = (from, to) => list.reduce((sum, a) => {
     const s = Math.max(a.onset.getTime(), from), e = Math.min((a.end || now).getTime(), to);
     return sum + Math.max(0, e - s);
   }, 0);
-
-  function daysSinceIncident(t) {
-    const before = list.filter(a => a.onset.getTime() <= t);
-    if (before.some(a => a.active || a.end.getTime() > t)) return 0;
-    const lastEnd = before.reduce((m, a) => Math.max(m, a.end.getTime()), FEED_START);
-    return (t - lastEnd) / DAY;
-  }
-
-  const niceMax = v => [1, 2, 5, 10, 20, 30, 60, 90, 120, 180].find(n => n >= v) || Math.ceil(v / 60) * 60;
 
   // Highcharts-style axis labels: "18:00", with the date ("8. Oct") at midnight.
   function xTicks(start, end, range) {
@@ -435,18 +425,11 @@ footer a { color: var(--muted); }
 
     const availability = times.slice(1).map(t => ({ t, v: 100 * (1 - downtime(t - step, t) / step) }));
     const overall = 100 * (1 - downtime(start, end) / (end - start));
-    const since = times.map(t => ({ t, v: daysSinceIncident(t) }));
-    const current = daysSinceIncident(end);
-    const sinceMax = niceMax(Math.max(...since.map(p => p.v), 1));
 
     return `
       <div class="metric">
         <div class="metric-head"><span class="metric-name">Head Availability</span><span class="metric-value">${+overall.toFixed(3)}%</span></div>
         ${lineChart(availability, { start, end, max: 100, fmtY: v => v })}
-      </div>
-      <div class="metric">
-        <div class="metric-head"><span class="metric-name">Time Since Last Incident</span><span class="metric-value">${current.toFixed(1)} days</span></div>
-        ${lineChart(since, { start, end, max: sinceMax, fmtY: v => +v.toFixed(1) })}
       </div>`;
   }
 
